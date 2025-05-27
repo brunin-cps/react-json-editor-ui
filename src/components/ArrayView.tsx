@@ -43,6 +43,7 @@ function ArrayView(props: Props) {
               )}
               {
                 <ToolsView
+                  deepLevel={props.deepLevel}
                   uniqueKey={uniqueKey}
                   fieldValue={item}
                   fieldKey={`${index}`}

@@ -19,11 +19,13 @@ export type JsonViewProps = {
   editObject: Record<string, any>
   optionsMap?: Record<
     string,
-    Array<{
-      value: string
-      label?: string
-    }>
+    Array<content>
   >
+}
+
+type content = {
+  value: string;
+  label?: string;
 }
 
 function JsonView(props: JsonViewProps) {
@@ -34,11 +36,16 @@ function JsonView(props: JsonViewProps) {
     setEditObject({ ...data })
   }
 
-  const onClickDelete = (key: string, sourceData: any) => {
+  const onClickDelete = (key: string, sourceData: any, uniqueKey: any) => {
     if (Array.isArray(sourceData)) {
       sourceData.splice(+key, 1)
     } else {
       Reflect.deleteProperty(sourceData, key)
+      setAllowMap((prev) => {
+        const value = { ...prev }
+        delete value[uniqueKey as string]
+        return value
+      })
     }
     syncData(editObject)
   }
@@ -206,7 +213,7 @@ function JsonView(props: JsonViewProps) {
                     style={{ width: '100px' }}
                     placeholder={fieldKey}
                     value={fieldKey}
-                    onChange={event =>
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                       onChangeKey(event, fieldKey, uniqueKey, sourceData)
                     }
                   />
@@ -226,6 +233,7 @@ function JsonView(props: JsonViewProps) {
                 <span className="toolsView">
                   {
                     <ToolsView
+                      deepLevel={deepLevel}
                       uniqueKey={uniqueKey}
                       fieldValue={fieldValue}
                       fieldKey={fieldKey}

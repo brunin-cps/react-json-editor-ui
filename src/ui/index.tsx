@@ -1,26 +1,29 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import './styles.css'
 
-// 基础Input组件
-export const Input = ({
-  size = 'default',
-  style = {},
-  placeholder,
-  value,
-  onChange,
-  ...props
-}: {
+type InputT = {
   size?: 'small' | 'default' | 'large'
   style?: React.CSSProperties
   placeholder?: string
   value?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   [key: string]: any
-}) => {
+}
+
+// 基础Input组件
+export const Input = forwardRef<HTMLInputElement, InputT>(({
+  size = 'default',
+  style = {},
+  placeholder,
+  value,
+  onChange,
+  ...props
+}: InputT, ref) => {
   const sizeClass = size === 'small' ? 'ui-input-sm' : size === 'large' ? 'ui-input-lg' : 'ui-input-default'
-  
+
   return (
     <input
+      ref={ref}
       className={`ui-input ${sizeClass}`}
       style={style}
       placeholder={placeholder}
@@ -29,7 +32,7 @@ export const Input = ({
       {...props}
     />
   )
-}
+})
 
 // 数字输入框组件
 export const InputNumber = ({
@@ -48,7 +51,7 @@ export const InputNumber = ({
   [key: string]: any
 }) => {
   const sizeClass = size === 'small' ? 'ui-input-sm' : size === 'large' ? 'ui-input-lg' : 'ui-input-default'
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       // 将输入值转换为数字类型
@@ -56,7 +59,7 @@ export const InputNumber = ({
       onChange(numValue as number);
     }
   };
-  
+
   return (
     <input
       type="number"
@@ -89,7 +92,7 @@ export const Select = ({
   [key: string]: any
 }) => {
   const sizeClass = size === 'small' ? 'ui-select-sm' : size === 'large' ? 'ui-select-lg' : 'ui-select-default'
-  
+
   return (
     <select
       className={`ui-select ${sizeClass}`}
@@ -155,23 +158,23 @@ export const AutoComplete = ({
   const [filteredOptions, setFilteredOptions] = React.useState(options)
   const [showDropdown, setShowDropdown] = React.useState(false)
   const sizeClass = size === 'small' ? 'ui-autocomplete-sm' : size === 'large' ? 'ui-autocomplete-lg' : 'ui-autocomplete-default'
-  
+
   React.useEffect(() => {
     setInputValue(value || '')
   }, [value])
-  
+
   React.useEffect(() => {
     if (filterOption) {
       setFilteredOptions(options.filter(option => filterOption(inputValue, option)))
     } else {
       setFilteredOptions(
-        options.filter(option => 
+        options.filter(option =>
           option.value.toLowerCase().includes(inputValue.toLowerCase())
         )
       )
     }
   }, [inputValue, options, filterOption])
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     setInputValue(newValue)
@@ -180,7 +183,7 @@ export const AutoComplete = ({
       onChange(newValue)
     }
   }
-  
+
   const handleOptionClick = (option: { value: string; label?: string }) => {
     setInputValue(option.value)
     setShowDropdown(false)
@@ -188,7 +191,7 @@ export const AutoComplete = ({
       onChange(option.value)
     }
   }
-  
+
   return (
     <div className="ui-autocomplete-container" style={style}>
       <input
@@ -202,8 +205,8 @@ export const AutoComplete = ({
       {showDropdown && filteredOptions.length > 0 && (
         <div className="ui-autocomplete-dropdown">
           {filteredOptions.map((option, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="ui-autocomplete-option"
               onClick={() => handleOptionClick(option)}
             >
@@ -231,7 +234,7 @@ export const Button = ({
   [key: string]: any
 }) => {
   const sizeClass = size === 'small' ? 'ui-button-sm' : size === 'large' ? 'ui-button-lg' : 'ui-button-default'
-  
+
   return (
     <button
       className={`ui-button ${sizeClass}`}

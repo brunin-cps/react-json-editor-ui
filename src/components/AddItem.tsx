@@ -9,7 +9,7 @@ import {
   Icons
 } from '../ui'
 const { PlusSquareOutlined } = Icons
-import React from 'react'
+import React, { CSSProperties, useRef } from 'react'
 import { useContext, useState } from 'react'
 import { ConfigContext } from '../store'
 import { DataType, typeMap } from '../common'
@@ -22,6 +22,7 @@ const AddItem = (props: {
   const { setEditObject, editObject, optionsMap } = useContext(ConfigContext)
   const { uniqueKey, sourceData } = props
   const isArray = Array.isArray(sourceData)
+  const keyRef = useRef<any>()
   const [templateData, setTemplateData] = useState<any>({})
   const [showIncreaseMap, setShowIncreaseMap] = useState<any>({})
   const onClickIncrease = (key: string, value: boolean) => {
@@ -54,7 +55,8 @@ const AddItem = (props: {
     if (isArray) {
       sourceData.push(value)
     } else {
-      sourceData[aKey] = value
+      if (value === undefined) sourceData[aKey] = ''
+      else sourceData[aKey] = value
     }
     setEditObject({ ...editObject })
     onClickIncrease(uniqueKey, false)
@@ -83,7 +85,7 @@ const AddItem = (props: {
           <InputNumber
             size="small"
             style={{ width: '100px' }}
-             onChange={value => {
+            onChange={value => {
               changeInputValue(uniqueKey, +value)
             }}
           />
@@ -110,6 +112,12 @@ const AddItem = (props: {
         return null
     }
   }
+
+  const disabledStyle: CSSProperties = {
+    pointerEvents: 'none',
+    opacity: '0.5,'
+  }
+
   return (
     <div className="addItem" key={uniqueKey}>
       {showIncreaseMap[uniqueKey] ? (
@@ -117,9 +125,10 @@ const AddItem = (props: {
           {!isArray && (
             <div>
               <Input
+                ref={keyRef}
                 size="small"
                 style={{ width: '100px' }}
-                onChange={event => changeInputKey(uniqueKey, event)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => changeInputKey(uniqueKey, event)}
               ></Input>
             </div>
           )}
@@ -148,6 +157,7 @@ const AddItem = (props: {
                 size="small"
                 type="primary"
                 onClick={() => onConfirmIncrease(uniqueKey, sourceData)}
+                style={keyRef.current?.value ? {} : disabledStyle}
               >
                 Confirm
               </Button>

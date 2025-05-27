@@ -4,6 +4,7 @@ export enum DataType {
   BOOLEAN = 'boolean',
   OBJECT = 'object',
   ARRAY = 'array',
+  NULL = 'null'
 }
 
 export const typeMap: Record<DataType, any> = {
@@ -12,6 +13,7 @@ export const typeMap: Record<DataType, any> = {
   [DataType.NUMBER]: 0,
   [DataType.OBJECT]: {},
   [DataType.ARRAY]: [],
+  [DataType.NULL]: null
 }
 
 export const getTypeString = (element: any): string => {

@@ -8,6 +8,7 @@ import {
 import { ConfigContext } from '../store'
 
 function ToolsView(props: {
+  deepLevel: any
   fieldValue: any
   fieldKey: string
   uniqueKey: string
@@ -34,7 +35,7 @@ function ToolsView(props: {
           <span className="icon-subtraction">
             <MinusSquareOutlined
               style={{ color: '#E74C3C' }}
-              onClick={() => onClickDelete(props.fieldKey, props.sourceData)}
+              onClick={() => onClickDelete(props.fieldKey, props.sourceData, props.uniqueKey)}
             />
           </span>
         </span>
